@@ -1,0 +1,28 @@
+# kcell data file if exist(If not, DO LEAVE the blank line)
+./g822_kcell.dat
+# Xa[2], Xb[2]
+  0.0 0.0
+  70.0  35.0
+# Ndiv[2]
+ 1400 700
+# Wa[2] (PML, lower left corner)
+ 5.0 0.0
+# Wb[2] (PML, upper right corner)
+ 5.0 0.0
+# rho, cL, cT (density & wave velocities)
+ 2.7 6.0 3.0
+# Ya, Yb (imaging area)
+  0.001 0.001
+  69.99 34.99
+#ts, te, Nt (output times)
+ 0.0 50.0 101
+
+##RECS
+# nrec
+ 1
+# idir, ityp, X1, X2, npnt (ityp=grid type, idir=0: horiz, 1:vert)
+ 0 0
+ 40.0 11.999
+ 60.0 11.999 
+ 81
+##END"
