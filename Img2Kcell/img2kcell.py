@@ -282,7 +282,7 @@ if __name__=="__main__":
     fig1=plt.figure()
     ax0=fig1.add_subplot(211)
     ax1=fig1.add_subplot(212)
-    fname="g822.png"
+    fname="bead.png"
     img=IMG(fname)
 
     mm_pix=0.05 # length[mm]/pixel
