@@ -53,7 +53,8 @@ int main(int argv, char *argc[]){
 	dom1.slit(fgeom);// perforate computational domain
 	dom1.angled_slit(fgeom);// perforate computational domain
 	dom1.polygon(fgeom);
-	dom1.WireCut();
+	dom1.Cut(fgeom);
+	//dom1.WireCut();
 	dom1.out_kcell(); // export kcell data
 
 	ncrk=make_cracks(fgeom,dom1,&crk);

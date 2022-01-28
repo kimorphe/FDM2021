@@ -193,10 +193,45 @@ void Dom2D::perfo_ellip(char *fname){
 	fclose(fp);
 };
 //  ----------- DOMAIN PERFORATION  --------------
-void Dom2D::WireCut(){
-	double xc1[2]={11.0, 12.0};
-	double xc2[2]={13.0,  8.0};
-	double rd=0.1;
+void Dom2D::Cut(char *fname){
+	FILE *fp=fopen(fname,"r");
+	char cbff[7];
+	if(fp==NULL){
+		puts("Can't open file from Dom2D::perfo !");
+		puts(fname);
+		exit(-1);
+	}
+	double xs[2];	// start point
+	double XL;	// slit length
+	double wd;	// half width 
+	double alph;	// angle in deg
+	double xe[2];	// end point
+	double PI=atan(1.0)*4.0;
+	double rd;
+
+	while(fgets(cbff,7,fp) !=NULL){
+		if(strcmp(cbff,"##Wire")==0){
+			fscanf(fp,"%lf %lf \n",xs,xs+1);
+			fscanf(fp,"%lf %lf %lf \n",&XL, &wd, &alph);
+			rd=wd*0.5;
+			//printf("xs=%lf %lf\n",xs[0],xs[1]);
+			//printf("Xw=%lf alph=%lf\n",Xw,alph);
+			//exit(-1);
+			alph=alph/180.*PI;
+			xe[0]=xs[0]+XL*cos(alph);
+			xe[1]=xs[1]+XL*sin(alph);
+
+			Dom2D::WireCut(xs,xe,rd);
+		}
+	};
+};
+void Dom2D::WireCut(double xc1[2], double xc2[2],double rd){
+	//double xc1[2]={11.0, 12.0};
+	//double xc2[2]={13.0,  8.0};
+	printf("xc1=%lf %lf\n",xc1[0],xc1[1]);
+	printf("xc2=%lf %lf\n",xc2[0],xc2[1]);
+	printf("rd=%lf\n",rd);
+	//double rd=0.1;
 	int Nstep;
 	int i,j,k;
 
