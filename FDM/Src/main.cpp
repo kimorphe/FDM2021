@@ -53,6 +53,7 @@ int main(int argv, char *argc[]){
 	dom1.slit(fgeom);// perforate computational domain
 	dom1.angled_slit(fgeom);// perforate computational domain
 	dom1.polygon(fgeom);
+	dom1.WireCut();
 	dom1.out_kcell(); // export kcell data
 
 	ncrk=make_cracks(fgeom,dom1,&crk);
@@ -128,9 +129,9 @@ int main(int argv, char *argc[]){
 				printf("%s\n",fname);
 				fld1.snap_out(0,fname,it*dt,dom1);
 
-				sprintf(fname,"s%d.out",isum);
-				printf("%s\n",fname);
-				fld1.snap_out(2,fname,it*dt,dom1);
+				//sprintf(fname,"s%d.out",isum);
+				//printf("%s\n",fname);
+				//fld1.snap_out(2,fname,it*dt,dom1);
 
 				isum++;
 			}

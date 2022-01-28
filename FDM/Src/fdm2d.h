@@ -30,7 +30,9 @@ class Dom2D{
 		long int **kcell;
 		void perfo(char *fn);
 		void perfo_ellip(char *fn);
+		void perfo_tight(double xc[2],double rd);
 		void slit(char *fn);
+		void WireCut();
 		void angled_slit(char *fn);
 		void polygon(char *fn);
 		void out_kcell();

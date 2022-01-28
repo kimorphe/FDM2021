@@ -42,7 +42,9 @@ class REC:
         t1=0.;
         t2=self.dt*self.Nt;
         #im=ax.imshow(self.dat,extent=[t1,t2,x2,x1],cmap="jet",aspect="auto",vmin=-0.01,vmax=0.01);
-        im=ax.imshow(self.dat,extent=[t1,t2,x2,x1],cmap="jet",aspect="auto",vmin=-0.005,vmax=0.005,interpolation="bicubic");
+        v1=-0.002
+        v2= 0.002
+        im=ax.imshow(self.dat,extent=[t1,t2,x1,x2],cmap="gray",aspect="auto",vmin=v1,vmax=v2,interpolation="bicubic",origin="lower");
         #plt.colorbar(im,orientation="horizontal")
         return fig,ax;
 

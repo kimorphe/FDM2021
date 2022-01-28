@@ -86,7 +86,7 @@ class Vfld:
 
 
 nfile=99;
-inc=3;
+inc=1;
 
 fig=plt.figure();
 ax=fig.add_subplot(1,1,1)

@@ -193,6 +193,61 @@ void Dom2D::perfo_ellip(char *fname){
 	fclose(fp);
 };
 //  ----------- DOMAIN PERFORATION  --------------
+void Dom2D::WireCut(){
+	double xc1[2]={11.0, 12.0};
+	double xc2[2]={13.0,  8.0};
+	double rd=0.1;
+	int Nstep;
+	int i,j,k;
+
+	double xc[2],dxc[2];
+
+	double rx=xc2[0]-xc1[0];
+	double ry=xc2[1]-xc1[1];
+	double rr=sqrt(rx*rx+ry*ry);
+	Nstep=int(rr/dx[0]);
+	dxc[0]=rx/(Nstep-1);
+	dxc[1]=ry/(Nstep-1);
+
+
+	for(i=0;i<Nstep;i++){
+		xc[0]=xc1[0]+dxc[0]*i;
+		xc[1]=xc1[1]+dxc[1]*i;
+		Dom2D::perfo_tight(xc,rd);
+	};
+
+};
+void Dom2D::perfo_tight(double xc[2],double rd){
+	int i,j;
+	double xcod[2];
+	bool io;
+	Circ cdat;
+	cdat.xc[0]=xc[0];
+	cdat.xc[1]=xc[1];
+	cdat.radi=rd;
+
+
+	int i1=int((xc[0]-rd-Xa[0])/dx[0])-1;
+	int j1=int((xc[1]-rd-Xa[1])/dx[1])-1;
+	int i2=int((xc[0]+rd-Xa[0])/dx[0])+1;
+	int j2=int((xc[1]+rd-Xa[1])/dx[1])+1;
+
+	if(i1<0) i1=0;
+	if(j1<0) j1=0;
+	if(i2>=Ndiv[0]-1) i2=Ndiv[0]-1;
+	if(j2>=Ndiv[1]-1) j2=Ndiv[1]-1;
+
+	for(i=i1; i<=i2; i++){
+		xcod[0]=Xa[0]+dx[0]*(i+0.5);	
+	for(j=j1; j<=j2; j++){
+		xcod[1]=Xa[1]+dx[1]*(j+0.5);	
+		io=cdat.isin(xcod);	
+		if(io==true) kcell[i][j]=1;
+	}
+	}
+
+};
+//  ----------- DOMAIN PERFORATION  --------------
 void Dom2D::perfo(char *fname){
 	int i,j;
 	double xcod[2];

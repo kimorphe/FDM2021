@@ -282,7 +282,6 @@ if __name__=="__main__":
     fig1=plt.figure()
     ax0=fig1.add_subplot(211)
     ax1=fig1.add_subplot(212)
-    fname="g838.png"
     fname="beadless.png"
     img=IMG(fname)
 
