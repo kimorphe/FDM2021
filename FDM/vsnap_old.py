@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Vfld:
 	def __init__(self,fname):
 		fp=open(fname,"r");
@@ -84,21 +85,20 @@ class Vfld:
 		ax.set_title("|v|")
 
 
-if __name__=="__main__":
-    nfile=99;
-    inc=2;
+nfile=99;
+inc=2;
 
-    fig=plt.figure();
-    ax=fig.add_subplot(1,1,1)
+fig=plt.figure();
+ax=fig.add_subplot(1,1,1)
 
-    for k in range(0,nfile,inc):
-        fname="v"+str(k)+".out";
-        print(fname)
-        vf=Vfld(fname);
-        #vf.draw0();
-        vf.draw1(ax);
-        #if k==1:
-        #	plt.colorbar(cax1,orientation='horizontal')
-        fig.savefig(str(k)+".png",bbox_inches="tight")
-        plt.pause(0.1)
-        #raw_input("press enter to continue");
+for k in range(0,nfile,inc):
+	fname="v"+str(k)+".out";
+	print(fname)
+	vf=Vfld(fname);
+	#vf.draw0();
+	vf.draw1(ax);
+	#if k==1:
+	#	plt.colorbar(cax1,orientation='horizontal')
+	fig.savefig(str(k)+".png",bbox_inches="tight")
+	plt.pause(0.1)
+	#raw_input("press enter to continue");

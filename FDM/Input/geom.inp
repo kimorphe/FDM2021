@@ -22,6 +22,10 @@
  4.0 0.2 -70.0
 #END
 
+ Wire欄のformat
+  開始点の座標
+　長さ、幅、角度[deg]
+
 ##RECS
 # nrec
  1

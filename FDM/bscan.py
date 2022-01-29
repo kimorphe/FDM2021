@@ -31,27 +31,30 @@ class REC:
         print(np.shape(dat))
         print(self.Nt*self.Ng);
         self.dat=np.reshape(dat,(self.Ng,self.Nt))
-    def bscan(self):
+    def bscan(self,v1=-0.001,v2=0.001,cmap="gray"):
         fig=plt.figure();
         ax=fig.add_subplot(1,1,1);
-
         x1=self.ysrc[0];
         x2=self.ysrc[-1];
         x1=self.xsrc[0];
         x2=self.xsrc[-1];
         t1=0.;
         t2=self.dt*self.Nt;
-        #im=ax.imshow(self.dat,extent=[t1,t2,x2,x1],cmap="jet",aspect="auto",vmin=-0.01,vmax=0.01);
-        v1=-0.002
-        v2= 0.002
-        im=ax.imshow(self.dat,extent=[t1,t2,x1,x2],cmap="gray",aspect="auto",vmin=v1,vmax=v2,interpolation="bicubic",origin="lower");
-        #plt.colorbar(im,orientation="horizontal")
+        im=ax.imshow(self.dat,extent=[t1,t2,x1,x2],cmap=cmap,aspect="auto",vmin=v1,vmax=v2,interpolation="bicubic",origin="lower");
         return fig,ax;
+    def bscan2(self,ax,v1=-0.001,v2=0.001,cmap="gray"):
+        x1=self.ysrc[0];
+        x2=self.ysrc[-1];
+        x1=self.xsrc[0];
+        x2=self.xsrc[-1];
+        t1=0.;
+        t2=self.dt*self.Nt;
+        im=ax.imshow(self.dat,extent=[t1,t2,x1,x2],cmap=cmap,aspect="auto",vmin=v1,vmax=v2,interpolation="bicubic",origin="lower");
 
-rec=REC("rec0.out")
-
-fig,ax=rec.bscan();
-plt.show()
+if __name__=="__main__":
+    rec=REC("rec0.out")
+    fig,ax=rec.bscan();
+    plt.show()
 
 
 		
