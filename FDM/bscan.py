@@ -92,7 +92,10 @@ if __name__=="__main__":
 
     rec=REC(dir_name+"/"+fname)
     fig,ax=rec.bscan();
-
+    ax.set_xlim([2.5,32.5])
+    ax.set_ylim([26,46])
+    ax.set_ylim([50,70])
+    plt.show()
     rec.delay_sum(cR=2.830)
     
     fig2=plt.figure()

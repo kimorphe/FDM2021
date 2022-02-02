@@ -8,7 +8,7 @@
 # Wa[2] (PML, lower left corner)
  5.0 0.0
 # Wb[2] (PML, upper right corner)
- 5.0 0.0
+ 15.0 5.0
 # rho, cL, cT (density & wave velocities)
  2.7 6.0 3.0
 # Ya, Yb (imaging area)

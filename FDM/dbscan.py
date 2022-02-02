@@ -6,9 +6,11 @@ import matplotlib.pyplot as plt
 
 if __name__=="__main__":
 
-    dir_sc="A15H4"
-    dir_in="Bead"
+    dir_sc="L4A15"
+    dir_in="None"
     fname="rec0.out"
+    fnout=dir_sc+".png"
+    dir_sc=input("Type Data Folder Name:")
     fnin=dir_in+"/"+fname
     fnsc=dir_sc+"/"+fname
 
@@ -37,7 +39,7 @@ if __name__=="__main__":
     ax2.set_xlim([0,50])
     ax3.set_xlim([0,50])
 
-    fig.savefig("dbscan.png",bbox_inches="tight")
+    fig.savefig(fnout,bbox_inches="tight")
     plt.show()
 
 
