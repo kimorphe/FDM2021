@@ -112,10 +112,11 @@ void Dom2D::load_kcell(char *fname){
 		exit(-1);
 	};
 
-	xa[0]=0.0; 
-	xa[1]=0.0;
+	//xa[0]=0.0; xa[1]=0.0;  <-- use xa[2] from geom.inp
 	fgets(cbff,128,fp);
 	fscanf(fp,"%lf, %lf\n",xb,xb+1);
+	xb[0]+=xa[0];
+	xb[1]+=xa[1];
 
 	fgets(cbff,128,fp);
 	fscanf(fp,"%d, %d\n",Ndiv,Ndiv+1);
@@ -683,7 +684,7 @@ double Rwave(double cL, double cT){
 
 	sR=s0;
 	cR=1.0/sR;
-	printf("iteration=%d, relative error=%lf\n",it,fabs(err)/err0);
+	printf("cR=%lf, iteration=%d, relative error=%lf\n",cR,it,fabs(err)/err0);
 
 	return(cR);
 };
