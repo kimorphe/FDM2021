@@ -31,6 +31,7 @@ class Dom2D{
 		void perfo(char *fn);
 		void perfo_ellip(char *fn);
 		void perfo_tight(double xc[2],double rd);
+		void perfo_para(char *fn);
 		void slit(char *fn);
 		void Cut(char *fn);
 		void WireCut(double xs[2], double xe[2], double rd);
@@ -253,6 +254,7 @@ class Fld2D{
 		void out(int ityp, char *fname, double tout, Dom2D dom);
 		void out(int it, Recs rec, Dom2D dom);
 		void snap_out(int ityp, char *fname, double tout, Dom2D dom);
+		void snap_out_del(char *fname, double tout, Dom2D dom);
 		void outV1grid(Dom2D dom);
 		void outV2grid(Dom2D dom);
 		void outS12grid(Dom2D dom);

@@ -792,6 +792,42 @@ void Fld2D :: apply_src(int it, Src src,Dom2D dom){
 		};
 	}	
 };
+//	div and curl field output (2022/02/03)
+void Fld2D :: snap_out_del(char *fname, double tout, Dom2D dom){
+	int i,j,ndat[2];
+	double x1[2],x2[2],sxy,vx,vy;
+	FILE *fp=fopen(fname,"w");
+
+	ndat[0]=dom.iYb[0]-dom.iYa[0]+1;
+	ndat[1]=dom.iYb[1]-dom.iYa[1]+1;
+	indx2cod(dom.iYa[0],dom.iYa[1],2,dom.Xa,dom.dx,x1);
+	indx2cod(dom.iYb[0],dom.iYb[1],2,dom.Xa,dom.dx,x2);
+
+	fprintf(fp,"#time=%lf\n",tout);
+	fprintf(fp,"# Xa[0], Xb[0]\n");
+		fprintf(fp,"%lf %lf\n",x1[0],x2[0]);
+	fprintf(fp,"# Xa[1], Xb[1]\n");
+		fprintf(fp,"%lf %lf\n",x1[1],x2[1]);
+	fprintf(fp,"# Nx[0], Nx[1]\n");
+		fprintf(fp,"%d %d\n",ndat[0],ndat[1]);
+	fprintf(fp,"## ------ Divergence ------\n");
+	for(i=dom.iYa[0]; i<=dom.iYb[0]  ; i++){
+	for(j=dom.iYa[1]; j<=dom.iYb[1]  ; j++){
+		vx=v1[i+1][j]-v1[i][j];
+		vy=v2[i][j+1]-v2[i][j];
+		fprintf(fp,"%lf %lf \n",vx,vy);	// div (v) components
+	}
+	}
+
+	fprintf(fp,"## ------ Curl ------\n");
+	for(i=dom.iYa[0]; i<dom.iYb[0]  ; i++){
+	for(j=dom.iYa[1]; j<dom.iYb[1]  ; j++){
+		vx=v1[i][j+1]-v1[i][j];
+		vy=v2[i+1][j]-v2[i][j];
+		fprintf(fp,"%lf %lf \n",vx,vy);	// curl (v) components
+	}
+	}
+}
 void Fld2D :: snap_out(int ityp, char *fname, double tout, Dom2D dom){
 
 	int i,j,ndat[2];
@@ -847,7 +883,6 @@ void Fld2D :: out(int ityp, char *fname, double tout, Dom2D dom){
 	FILE *fp;
 	fp=fopen(fname,"w");
 //	gridNum(ityp);
-
 
 	indx2cod(dom.iYa[0],dom.iYa[1],ityp,dom.Xa,dom.dx,x1);
 	indx2cod(dom.iYb[0],dom.iYb[1],ityp,dom.Xa,dom.dx,x2);

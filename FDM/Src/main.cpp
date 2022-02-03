@@ -52,6 +52,7 @@ int main(int argv, char *argc[]){
 	dom1.perfo_ellip(fgeom);// perforate computational domain
 	dom1.slit(fgeom);// perforate computational domain
 	dom1.angled_slit(fgeom);// perforate computational domain
+	dom1.perfo_para(fgeom);
 	dom1.polygon(fgeom);
 	dom1.Cut(fgeom);
 	//dom1.WireCut();
@@ -129,6 +130,10 @@ int main(int argv, char *argc[]){
 				sprintf(fname,"v%d.out",isum);
 				printf("%s\n",fname);
 				fld1.snap_out(0,fname,it*dt,dom1);
+
+				sprintf(fname,"w%d.out",isum);
+				printf("%s\n",fname);
+				fld1.snap_out_del(fname,it*dt,dom1);
 
 				//sprintf(fname,"s%d.out",isum);
 				//printf("%s\n",fname);

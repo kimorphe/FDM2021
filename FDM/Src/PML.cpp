@@ -44,7 +44,7 @@ void PML :: setup(Dom2D dom, char *ficon){
 	mem_alloc();
 	set_IC(dom,ficon);
 
-	mexp=1;
+	mexp=2;
 	gmm=1.e-05;
 
 	for(i=0;i<nx[0]-1;i++){

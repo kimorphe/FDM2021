@@ -414,7 +414,7 @@ void Dom2D::polygon(char *fname){
 				//if(j>=Ndiv[1]) puts("j!!");
 				if(iin==np){
 					Dom2D::kcell[i][j]=1;
-					puts("Interior point !");
+			//		puts("Interior point !");
 				};
 			}
 			//printf("isum=%d\n",isum);
@@ -423,6 +423,58 @@ void Dom2D::polygon(char *fname){
 	};
 
 };
+void Dom2D::perfo_para(char *fname){
+	double ew[2],eh[2];  // unit vectors (basis)
+	double ewh[2],ehh[2];  // unit vectors (basis)
+	double xf[2],x0[2];	// lower left corner point
+	double W,H,alph;
+	char cbff[7];
+	double xw,xh;
+	FILE *fp;
+	fp=fopen(fname,"r");
+	if(fp==NULL){
+		puts("Can't open file from Dom2D::slit !");
+		puts(fname);
+		exit(-1);
+	}
+
+
+	double det;
+	int i,j;
+	double pi=4.*atan(1.0);
+	while(fgets(cbff,7,fp) !=NULL){
+		if(strcmp(cbff,"##Para")==0){
+			fscanf(fp,"%lf %lf\n",x0,x0+1);
+			fscanf(fp,"%lf %lf %lf\n",&W,&H,&alph);
+			ew[0]=W;
+			ew[1]=0.0;
+			alph=alph/180.*pi;
+			eh[0]=H*sin(alph);
+			eh[1]=H*cos(alph);
+			det=ew[0]*eh[1]-ew[1]+eh[0];
+			ewh[0]=eh[1]/det;
+			ewh[1]=-eh[0]/det;
+
+			ehh[0]=-ew[1]/det;
+			ehh[1]= ew[0]/det;
+
+			for(i=0;i<Ndiv[0];i++){
+				xf[0]=Xa[0]+dx[0]*(i+0.5)-x0[0];
+			for(j=0;j<Ndiv[1];j++){
+				xf[1]=Xa[1]+dx[1]*(j+0.5)-x0[1];
+
+				xw=xf[0]*ewh[0]+xf[1]*ewh[1];
+				xh=xf[0]*ehh[0]+xf[1]*ehh[1];
+				if(xw<0.0) continue;
+				if(xh<0.0) continue;
+				if(xw>1.0) continue;
+				if(xh>1.0) continue;
+				kcell[i][j]=1;
+			}
+			}
+		}
+	};
+}
 void Dom2D::angled_slit(char *fname){
 	double xc[2],e1[2],e2[2],xf[2];
 	double a,b,alph,x1,x2;

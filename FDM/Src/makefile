@@ -1,4 +1,4 @@
-all: ../plot_inwv ../fdm2d
+all: ../fdm2d ../plot_inwv
 
 ../fdm2d: domain.o main.o indx_cod.o field.o\
 	PML.o InWv.o cmplx.o source.o recs.o crack.o COD.o icon.o

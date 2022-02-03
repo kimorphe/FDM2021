@@ -77,7 +77,7 @@ class Vfld:
 
 		rng=[self.xlim[0],self.xlim[1],self.ylim[0], self.ylim[1]];
 		V=np.sqrt(self.v1*self.v1+self.v2*self.v2);
-		cax1=ax.imshow(V,extent=rng,vmin=0,vmax=0.01,cmap="jet");
+		cax1=ax.imshow(V,extent=rng,vmin=0.0,vmax=0.004,cmap="jet");
 
 		ax.set_xlabel("x")
 		ax.set_ylabel("y")
@@ -85,8 +85,8 @@ class Vfld:
 
 
 if __name__=="__main__":
-    nfile=99;
-    inc=2;
+    nfile=40;
+    inc=1;
 
     fig=plt.figure();
     ax=fig.add_subplot(1,1,1)
