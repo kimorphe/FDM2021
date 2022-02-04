@@ -7,6 +7,7 @@ git add FDM/Src/makefile
 
 git add FDM/Input/*
 git add FDM/*.py
+git add FDM/Pycodes
 
 git add Img2Kcell/*.py
 git add Img2Kcell/*.svg

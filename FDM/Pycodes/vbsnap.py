@@ -1,11 +1,15 @@
 #!  /home/kazushi/anaconda3/bin/python
 import numpy as np
 import matplotlib.pyplot as plt
+import bscan
 
 class Vfld:
 	def __init__(self,fname):
 		fp=open(fname,"r");
-		self.tstmp=fp.readline();
+		self.tstmp=fp.readline().strip();
+		print(self.tstmp)
+		txt=self.tstmp.split("=");
+		self.time=float(txt[1])
 
 		fp.readline();
 		tmp=fp.readline().lstrip().split(" ");
@@ -31,26 +35,19 @@ class Vfld:
 		ndat=0
 		for row in dat:
 			item=row.lstrip().split(" ");
-			#self.v1.append(float(item[0]))
-			#self.v2.append(float(item[1]))
 			self.v1[ndat]=float(item[0])
 			self.v2[ndat]=float(item[1])
 			ndat+=1
 
 		fp.close()
-		#self.v1=np.array(self.v1)
-		#self.v2=np.array(self.v2)
-
-		#ndim=(self.Ng[0],self.Ng[1]);
-		#self.v1=np.reshape(self.v1,ndim)
-		#self.v2=np.reshape(self.v2,ndim)
 		self.v1=np.reshape(self.v1,[self.Ng[0],self.Ng[1]])
 		self.v2=np.reshape(self.v2,[self.Ng[0],self.Ng[1]])
 		self.v1=np.transpose(self.v1)
 		self.v2=np.transpose(self.v2)
+		self.v=np.sqrt(self.v1**2+self.v2**2)
+
 	def draw0(self):
 		fig=plt.figure();
-
 
 		indx=np.arange(self.Ng[1],0,-1)-1;
 		for k in range(self.Ng[0]):
@@ -75,40 +72,47 @@ class Vfld:
 		ax1.set_title("v1")
 		ax2.set_title("v2")
 	def draw1(self,ax):
-		"""
-		indx=np.arange(self.Ng[1],0,-1)-1;
-		for k in range(self.Ng[0]):
-			self.v1[k]=self.v1[k][indx];
-			self.v2[k]=self.v2[k][indx];
-		self.v1=np.transpose(self.v1)
-		self.v2=np.transpose(self.v2)
-		"""
 		rng=[self.xlim[0],self.xlim[1],self.ylim[0], self.ylim[1]];
 		V=np.sqrt(self.v1*self.v1+self.v2*self.v2);
-		cax1=ax.imshow(V,extent=rng,vmin=0,vmax=0.01,cmap="jet",origin="lower");
+		img=ax.imshow(V,extent=rng,vmin=0,vmax=0.01,cmap="jet",origin="lower");
 
 		ax.set_xlabel("x")
 		ax.set_ylabel("y")
-		ax.set_title("|v|")
+		#ax.set_title("|v|")
+		return(img)
 
 
 if __name__=="__main__":
+
+    dir_name="L4A0"
+    dir_name+="/"
+    fnrec="rec0.out"
+    rec=bscan.REC(dir_name+fnrec)
+
     nfile=15;
     inc=1;
     n1=1
 
     fig=plt.figure();
-    ax=fig.add_subplot(1,1,1)
+    ax=fig.add_subplot(211)
+    bx=fig.add_subplot(212)
+    rec.bscan2(bx)
 
+    iplt=0
     for k in range(n1,nfile,inc):
         fname="v"+str(k)+".out";
+        fname=dir_name+fname
         print(fname)
         vf=Vfld(fname);
-        #vf.draw0();
-        vf.draw1(ax);
+        if iplt==0:
+            line,=bx.plot([vf.time,vf.time],rec.ylim)
+            img=vf.draw1(ax);
+        else:
+            line.set_xdata([vf.time,vf.time])
+            line.set_ydata([rec.ylim])
+            img.set_data(vf.v)
         #if k==1:
         #	plt.colorbar(cax1,orientation='horizontal')
         fig.savefig(str(k)+".png",bbox_inches="tight")
-        ax.clear()
         #plt.pause(0.1)
-        #raw_input("press enter to continue");
+        iplt+=1
