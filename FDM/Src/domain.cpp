@@ -87,6 +87,13 @@ Dom2D::Dom2D(char *fname){ //Contructor
 	}
 
 	if(strlen(fkcell) > nchar_min){
+		/*
+		for(i=0;i<Ndiv[0];i++){
+		for(j=0;j<Ndiv[1];j++){
+			kcell[i][j]=1;
+		}
+		}
+		*/
 		fp=fopen(fkcell,"r");
 		for(i=0;i<5;i++){
 		       	fgets(cbff,128,fp);
@@ -112,10 +119,12 @@ void Dom2D::load_kcell(char *fname){
 		exit(-1);
 	};
 
-	xa[0]=0.0; 
-	xa[1]=0.0;
+	//xa[0]=0.0; 
+	//xa[1]=0.0;
 	fgets(cbff,128,fp);
 	fscanf(fp,"%lf, %lf\n",xb,xb+1);
+	xb[0]+=xa[0];
+	xb[1]+=xa[1];
 
 	fgets(cbff,128,fp);
 	fscanf(fp,"%d, %d\n",Ndiv,Ndiv+1);
@@ -123,6 +132,7 @@ void Dom2D::load_kcell(char *fname){
 	printf("xa=%lf %lf\n",xa[0],xa[1]);
 	printf("xb=%lf %lf\n",xb[0],xb[1]);
 	printf("Ndiv=%d %d\n",Ndiv[0],Ndiv[1]);
+	//exit(-1);
 
 	fgets(cbff,128,fp);
 /*
@@ -607,6 +617,42 @@ void Dom2D::slit(char *fname){
 	fclose(fp);
 }
 //-------------EXPORT GEOMETRY DATA  ------------------
+void Dom2D :: out_kcell_tight(){
+	FILE *fp=fopen("kcell_tight.dat","w");
+	int i,j;
+	double Ya[2],Yb[2];
+
+	fprintf(fp,"# xa[2], xb[2] (computational domian)\n");
+	fprintf(fp," %lf %lf\n %lf %lf\n",xa[0],xa[1],xb[0],xb[1]);
+
+	fprintf(fp,"# Xa[2], Xb[2] (physical domain) \n");
+	fprintf(fp," %lf %lf\n %lf %lf\n",xa[0],xa[1],xb[0],xb[1]);
+
+	fprintf(fp,"# Ya[2], Yb[2] (imaging area) \n");
+	for(i=0;i<2;i++){
+		Ya[i]=Xa[i]+dx[i]*(iYa[i]+0.5);
+		Yb[i]=Xa[i]+dx[i]*(iYb[i]+0.5);
+	}
+
+	fprintf(fp,"%lf %lf\n %lf %lf\n",Ya[0],Ya[1],Yb[0],Yb[1]);
+
+	int ndiv[2],I,J;
+	ndiv[0]=Ndiv[0]-(nwa[0]+nwb[0]);
+	ndiv[1]=Ndiv[1]-(nwa[1]+nwb[1]);
+	fprintf(fp,"# Ndiv[0], Ndiv[1]\n");
+	fprintf(fp,"%d %d\n",ndiv[0],ndiv[1]);
+	fprintf(fp,"# kcell[i][j]\n");
+
+	for(i=0;i<ndiv[0];i++){
+	for(j=0;j<ndiv[1];j++){
+		I=i+nwa[0]-1;
+		J=j+nwa[1]-1;
+		fprintf(fp, "%ld\n",kcell[I][J]);
+	}
+	}
+
+	fflush(fp);
+}
 void Dom2D :: out_kcell(){
 
 	FILE *fp=fopen("kcell.dat","w");

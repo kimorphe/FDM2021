@@ -57,6 +57,7 @@ int main(int argv, char *argc[]){
 	dom1.Cut(fgeom);
 	//dom1.WireCut();
 	dom1.out_kcell(); // export kcell data
+	dom1.out_kcell_tight(); // export kcell data without PML
 
 	ncrk=make_cracks(fgeom,dom1,&crk);
 	fCOD=(FILE **)malloc(sizeof(FILE*)*ncrk);

@@ -1,4 +1,4 @@
-all: ../fdm2d ../plot_inwv
+all: ../fdm2d ../plot_inwv ../bnd ../bnd_tight
 
 ../fdm2d: domain.o main.o indx_cod.o field.o\
 	PML.o InWv.o cmplx.o source.o recs.o crack.o COD.o icon.o
@@ -6,6 +6,11 @@ all: ../fdm2d ../plot_inwv
 
 ../plot_inwv: cmplx.o plot_inwv.o InWv.o
 	g++ -o ../plot_inwv cmplx.o plot_inwv.o InWv.o
+
+../bnd: bnd.o
+	g++ -o ../bnd bnd.o
+../bnd_tight: bnd_tight.o
+	g++ -o ../bnd_tight bnd_tight.o
 
 plot_inwv.o: plot_inwv.cpp
 	g++ -c plot_inwv.cpp
@@ -35,3 +40,8 @@ cmplx.o: cmplx.cpp
 	g++ -c cmplx.cpp
 rayleigh.o: rayleigh.cpp
 	g++ -c rayleigh.cpp
+
+bnd.o:bnd.cpp
+	g++ -c bnd.cpp
+bnd_tight.o:bnd_tight.cpp
+	g++ -c bnd_tight.cpp
