@@ -132,9 +132,9 @@ int main(int argv, char *argc[]){
 				printf("%s\n",fname);
 				fld1.snap_out(0,fname,it*dt,dom1);
 
-				sprintf(fname,"w%d.out",isum);
-				printf("%s\n",fname);
-				fld1.snap_out_del(fname,it*dt,dom1);
+				//sprintf(fname,"w%d.out",isum);
+				//printf("%s\n",fname);
+				//fld1.snap_out_del(fname,it*dt,dom1);
 
 				//sprintf(fname,"s%d.out",isum);
 				//printf("%s\n",fname);

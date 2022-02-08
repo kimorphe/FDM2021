@@ -56,8 +56,8 @@ class REC:
         x2=self.xsrc[-1];
         t1=0.;
         t2=self.dt*self.Nt;
-        self.ylim=[x1,x2]
-        im=ax.imshow(np.transpose(self.dat),extent=[x1,x2,t1,t2],cmap=cmap,aspect="auto",vmin=v1,vmax=v2,interpolation="bicubic",origin="lower");
+        self.ylim=[x2,x1]
+        im=ax.imshow(np.transpose(self.dat),extent=[x1,x2,t2,t1],cmap=cmap,aspect="auto",vmin=v1,vmax=v2,interpolation="bicubic")#,origin="lower");
         return(im)
     def get_amp(self,rnum,time):
         it=int(time/self.dt)
@@ -99,8 +99,8 @@ if __name__=="__main__":
 
     rec=REC(dir_name+"/"+fname)
     fig,ax=rec.bscan();
-    ax.set_xlim([-2.5,47.5])
-    ax.set_ylim([25,45])
+    #ax.set_xlim([-2.5,47.5])
+    #ax.set_ylim([25,45])
     #ax.set_ylim([50,70])
     plt.show()
     rec.delay_sum(cR=2.830)

@@ -1,8 +1,12 @@
 #!  /home/kazushi/anaconda3/bin/python
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker
 import bscan
 import bnd
+import os
+
+from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 class Vfld:
 	def __init__(self,fname):
@@ -74,31 +78,55 @@ class Vfld:
 	def draw1(self,ax,vmax=0.01):
 		rng=[self.xlim[0],self.xlim[1],self.ylim[0], self.ylim[1]];
 		V=np.sqrt(self.v1*self.v1+self.v2*self.v2);
-		img=ax.imshow(V,extent=rng,vmin=0,vmax=vmax,cmap="jet",origin="lower",aspect="equal");
+		#img=ax.imshow(V,extent=rng,vmin=0,vmax=vmax,cmap="jet",origin="lower",aspect="equal");
+		img=ax.imshow(self.v2,extent=rng,vmin=-vmax,vmax=vmax,cmap="jet",origin="lower",aspect="equal");
 		return(img)
+
 
 if __name__=="__main__":
 
     dir_name="L4A15"
+    dir_name=input("Data folder?")
+    png_dir="PNG_"+dir_name
+    if not os.path.exists(png_dir):
+        os.mkdir(png_dir)
+
     dir_name+="/"
     fnrec="rec0.out"
     rec=bscan.REC(dir_name+fnrec)
 
+
     rec2=bscan.REC("None/"+fnrec)
     rec.dat-=rec2.dat
+
+    geom_in=bnd.Crv("None/bnd.out")
+    geom_sc=bnd.Crv(dir_name+"bnd.out")
 
     nfile=100;
     inc=1;
     n1=1
 
-    fig=plt.figure(figsize=[9,6]);
+    fig=plt.figure(figsize=[11,6]);
     ax=fig.add_subplot(221) # incident field
     bx=fig.add_subplot(223) # scattered field
     cx=fig.add_subplot(122) # Bscan
-    rec.bscan3(cx,v1=-0.0002,v2=0.0002,cmap="gray_r")
 
-    geom=bnd.Crv(dir_name+"bnd.out")
-    geom1=bnd.Crv("None/bnd.out")
+    #---------COLOR SCALES-----------
+    vmax_bwv=5.e-04
+    vmax_in= 5.e-03
+    vmax_sc= 5.e-04
+    #--------------------------------
+    bimg=rec.bscan3(cx,v1=-vmax_bwv,v2=vmax_bwv,cmap="jet")
+
+    ax_divider=make_axes_locatable(ax)
+    bx_divider=make_axes_locatable(bx)
+    cx_divider=make_axes_locatable(cx)
+    cax=ax_divider.append_axes("right",size="5%",pad="3%")
+    cbx=bx_divider.append_axes("right",size="5%",pad="3%")
+    ccx=cx_divider.append_axes("bottom",size="3%",pad="12%")
+    fmt=matplotlib.ticker.ScalarFormatter(useMathText=True)
+    fmt.set_powerlimits((0,0))
+    cb3=fig.colorbar(bimg,cax=ccx,orientation="horizontal",format=fmt)
 
     iplt=0
     for k in range(n1,nfile,inc):
@@ -108,54 +136,63 @@ if __name__=="__main__":
         vf2=Vfld("None/"+fname);
         vf.v1-=vf2.v1
         vf.v2-=vf2.v2
-        vmax=0.003
         if iplt==0:
             #line,=cx.plot([vf.time,vf.time],rec.ylim)
-            line,=cx.plot(rec.ylim,[vf.time,vf.time],"r",linewidth=1)
-            img=vf.draw1(bx,vmax=vmax);
-            img2=vf2.draw1(ax,vmax=vmax);
+            line,=cx.plot(rec.ylim,[vf.time,vf.time],"k",linewidth=1.0,label="current time")
+
+            img2=vf2.draw1(ax,vmax=vmax_in);
+            img=vf.draw1(bx,vmax=vmax_sc);
             ax.set_ylabel("y [mm]")
             bx.set_ylabel("y [mm]")
             bx.set_xlabel("x [mm]")
             cx.set_xlabel("x [mm]")
             cx.set_ylabel("time [micro sec]",rotation=90)
+            ax.set_title("incident field")
+            #bx.set_title("scattered field")
             cx.set_title("travel time plot")
 
-            bx.plot(rec.ylim,rec.ysrc[0:2],"r",linewidth=2)
+            bx.plot(rec.ylim,rec.ysrc[0:2],"k",linewidth=2,label="observation area")
             #txt=ax.text(20,30,"t="+str(vf.time),size=12,color="w")
-            #cax=plt.axes([0.15,0.5, 0.3,0.04]) # for Plate 
-            cax=plt.axes([0.15,0.5, 0.3,0.03]) 
-            cb1=plt.colorbar(img,cax=cax,orientation="horizontal")
+            cb1=fig.colorbar(img,cax=cax,orientation="vertical",format=fmt)
+            cb2=fig.colorbar(img2,cax=cbx,orientation="vertical",format=fmt)
             ax.set_xlim(vf.xlim)
             bx.set_xlim(vf.xlim)
             ax.set_ylim(vf.ylim)
             bx.set_ylim(vf.ylim)
-            geom1.draw(ax,"w",lw=1.0)
-            geom.draw(bx,"w",lw=1.0)
+            geom_in.draw(ax,"w",lw=1.0)
+            geom_sc.draw(ax,"w",lw=0.5)
+            geom_sc.draw(bx,"w",lw=1.0)
+
+            axp=ax.get_position()
+            bxp=bx.get_position()
+            cxp=cx.get_position()
+            w=axp.width*0.7
+            #h=axp.height
+            x0=cxp.x0+0.01
+            y0=bxp.y0
+            h=(axp.y0+axp.height-bxp.y0)
+            cx.set_position([x0,y0,w,h])
+            bx.legend(loc="upper right")
+            cx.legend(loc="upper right")
+            cx.set_ylim([45,0])
         else:
             #line.set_xdata([vf.time,vf.time])
             #line.set_ydata([rec.ylim])
             line.set_xdata([rec.ylim])
             line.set_ydata([vf.time,vf.time])
             V=np.sqrt(vf.v1**2+vf.v2**2)
-            img.set_data(V)
-            img2.set_data(vf2.v)
+            #img.set_data(V)
+            #img2.set_data(vf2.v)
+            img.set_data(vf.v2)
+            img2.set_data(vf2.v2)
+            #txt.text="time="+str(vf.time)
             #txt.text="time="+str(vf.time)
             #txt=ax.text(20,30,"t="+str(vf.time),size=12,color="w")
-        ax.set_title("incident field (t="+"{:.2f}".format(vf.time)+"$\mu$ sec)")
-        bx.set_title("scattered field (t="+"{:.2f}".format(vf.time)+"$\mu$ sec)")
-        axp=ax.get_position()
-        bxp=bx.get_position()
-        cxp=cx.get_position()
-        w=axp.width*0.8
-        h=axp.height
-        x0=cxp.x0
-        y0=bxp.y0
-        h=axp.y0+axp.height-bxp.y0
-        cx.set_position([x0,y0,w,h])
+        ax.set_title("incident field (t={:.2f}".format(vf.time)+"$\mu$sec)")
+        bx.set_title("scattere field (t={:.2f}".format(vf.time)+"$\mu$sec)")
         #cx.set_xlim([-25,45])
         #if k==1:
         #	plt.colorbar(cax1,orientation='horizontal')
-        fig.savefig(str(k)+".png",bbox_inches="tight",dpi=300)
+        fig.savefig(png_dir+"/"+str(k)+".png",bbox_inches="tight")
         #plt.pause(0.1)
         iplt+=1
